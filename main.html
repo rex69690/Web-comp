@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFF0BD; /* Soft yellowish color */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #E50046; /* Bright pinkish-red color */
+            font-size: 36px;
+        }
+
+        .filter {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .filter select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #CFDB9C; /* Soft greenish color */
+            cursor: pointer;
+            background-color: #FDAB9E; /* Warm peachy color */
+        }
+
+        .filter select:hover {
+            background-color: #E50046; /* Bright pinkish-red for hover effect */
+            color: white;
+        }
+
+        .movies {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .movie {
+            width: 200px;
+            margin: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #FFF0BD; /* Soft yellowish background */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .movie img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .movie h3 {
+            font-size: 18px;
+            color: #E50046; /* Bright pinkish-red color */
+        }
+
+        .movie p {
+            font-size: 14px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .genre {
+            font-size: 12px;
+            color: #CFDB9C; /* Soft greenish color */
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Movie Recommendations</h1>
+    
+    <div class="filter">
+        <select id="genreFilter" onchange="filterMovies()">
+            <option value="all">All Genres</option>
+            <option value="action">Action</option>
+            <option value="comedy">Comedy</option>
+            <option value="drama">Drama</option>
+            <option value="horror">Horror</option>
+            <option value="thriller">Thriller</option>
+        </select>
+    </div>
+
+    <div class="movies" id="movieList">
+        <!-- Movies will be injected here by JavaScript -->
+    </div>
+</div>
+
+<script>
+    const movies = [
+        {
+            title: 'Inception',
+            genre: 'action',
+            description: 'A mind-bending thriller where a thief who steals corporate secrets using dream-sharing technology is given a chance to have his criminal record erased.',
+            poster: 'https://m.media-amazon.com/images/I/51ZfM7FVJbL._AC_.jpg',
+        },
+        {
+            title: 'The Hangover',
+            genre: 'comedy',
+            description: 'Three buddies wake up from a bachelor party in Las Vegas, with no memory of the previous night and the bachelor missing.',
+            poster: 'https://m.media-amazon.com/images/I/71Jr-6gl9sL._AC_SY679_.jpg',
+        },
+        {
+            title: 'The Shawshank Redemption',
+            genre: 'drama',
+            description: 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
+            poster: 'https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg',
+        },
+        {
+            title: 'A Quiet Place',
+            genre: 'horror',
+            description: 'A family must live in silence to avoid mysterious creatures that hunt by sound.',
+            poster: 'https://m.media-amazon.com/images/I/81LrHjKmcjL._AC_SY679_.jpg',
+        },
+        {
+            title: 'The Dark Knight',
+            genre: 'action',
+            description: 'Batman faces his toughest challenge yet: the Joker, a criminal mastermind who seeks to create chaos in Gotham City.',
+            poster: 'https://m.media-amazon.com/images/I/71P6ESzJQAL._AC_SY679_.jpg',
+        },
+        {
+            title: 'Get Out',
+            genre: 'thriller',
+            description: 'A young African-American man visits his white girlfriend\'s parents for the weekend, but the encounter turns unsettling as he uncovers disturbing truths.',
+            poster: 'https://m.media-amazon.com/images/I/81dS3XHQkDL._AC_SY679_.jpg',
+        },
+        {
+            title: '3 Idiots',
+            genre: 'comedy',
+            description: 'Two friends search for their long-lost companion. The movie highlights the pressures of the educational system and the importance of following one’s passion.',
+            poster: 'https://m.media-amazon.com/images/I/71d4pcA2R0L._AC_SY679_.jpg',
+        },
+        {
+            title: 'Dangal',
+            genre: 'drama',
+            description: 'A former wrestler trains his daughters to become world-class wrestlers and bring pride to India.',
+            poster: 'https://m.media-amazon.com/images/I/91VdYhCB60L._AC_SY679_.jpg',
+        },
+        {
+            title: 'Kabhi Khushi Kabhie Gham',
+            genre: 'drama',
+            description: 'A family drama about the complex relationship between parents and children, love, and emotional connections.',
+            poster: 'https://m.media-amazon.com/images/I/91ytj71As8L._AC_SY679_.jpg',
+        },
+        {
+            title: 'Lagaan',
+            genre: 'drama',
+            description: 'In the British-occupied India, a group of villagers, led by a determined young man, challenge British soldiers to a game of cricket to remove their oppressive tax.',
+            poster: 'https://m.media-amazon.com/images/I/81OPvBfr92L._AC_SY679_.jpg',
+        },
+        {
+            title: 'Bahubali: The Beginning',
+            genre: 'action',
+            description: 'The story of a powerful king and his kingdom in a mythical world, filled with adventure, betrayal, and love.',
+            poster: 'https://m.media-amazon.com/images/I/91knJY5r7RL._AC_SY679_.jpg',
+        },
+        {
+            title: 'Piku',
+            genre: 'comedy',
+            description: 'A quirky father-daughter duo’s relationship is tested as they go on a road trip together.',
+            poster: 'https://m.media-amazon.com/images/I/91ne2H53TNL._AC_SY679_.jpg',
+        },
+        {
+            title: 'Andhadhun',
+            genre: 'thriller',
+            description: 'A blind pianist becomes entangled in a series of murders when he inadvertently witnesses one.',
+            poster: 'https://m.media-amazon.com/images/I/71IKX5aV-yL._AC_SY679_.jpg',
+        },
+        {
+            title: 'PK',
+            genre: 'comedy',
+            description: 'An alien who arrives on Earth gets caught in the social and political troubles of India, and through his innocent questions, the truth about religion and society is revealed.',
+            poster: 'https://m.media-amazon.com/images/I/81V6UXXkLlL._AC_SY679_.jpg',
+        }
+    ];
+
+    function displayMovies(filteredMovies) {
+        const movieList = document.getElementById('movieList');
+        movieList.innerHTML = '';
+
+        filteredMovies.forEach(movie => {
+            const movieDiv = document.createElement('div');
+            movieDiv.classList.add('movie');
+
+            movieDiv.innerHTML = `
+                <img src="${movie.poster}" alt="${movie.title}">
+                <h3>${movie.title}</h3>
+                <p>${movie.description}</p>
+                <div class="genre">${movie.genre}</div>
+            `;
+
+            movieList.appendChild(movieDiv);
+        });
+    }
+
+    function filterMovies() {
+        const genreFilter = document.getElementById('genreFilter').value;
+        const filteredMovies = genreFilter === 'all' ? movies : movies.filter(movie => movie.genre === genreFilter);
+        displayMovies(filteredMovies);
+    }
+
+    // Initial display of all movies
+    displayMovies(movies);
+</script>
+
+</body>
+</html>
+
